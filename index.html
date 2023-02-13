@@ -21,16 +21,46 @@
         </div>
             
         <nav class="menu">
-            <a class="btnHome" href="">Home</a>
-            <a class="btnUniverse" href="">The Universe</a>
-            <a class="btnExploration" href="">Exploration</a>   
+            <a class="btnHome" href="/" onclick="route()">Home</a>
+            <a class="btnUniverse" href="/universe" onclick="route()">The Universe</a>
+            <a class="btnExploration" href="/exploration" onclick="route()">Exploration</a>   
         </nav>
     </header>
 
-    <main class="main">
-        <h1>Explore the Universe</h1>
-        <button>I want to know more</button>
-    </main>
+    <div id="app"></div>
+
+    <script>
+        const routes = {
+            "/": "/pages/home.html",
+            "/universe": "/pages/universe.html",
+            "/exploration": "/pages/exploration.html"
+        }
+        
+        function route(event) {
+            event = event || window.event
+            event.preventDefault()
+
+            window.history.pushState({}, "", event.target.href)
+
+            handle()
+        }
+
+        function handle() {
+            const {pathname} = window.location
+            const route = routes[pathname]
+
+            fetch(route)
+            .then(data => data.text())
+            .then(html => {
+                document.querySelector("#app").innerHTML = html
+            })
+        }
+
+        handle()
+
+        window.onpopstate = () => handle()
+
+    </script>
  
 </body>
 </html>
